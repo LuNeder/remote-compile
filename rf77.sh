@@ -66,6 +66,8 @@ case $1 in
     --help)
         echo 'Remote f77'
         echo 'GitHub:  https://github.com/LuNeder/remote-f77'
+        echo '(c) 2023 Luana Neder'
+        echo 'Licenciado sob a LPPL >=1.3'
         echo
         echo 'Uso: '$0' [ARQUIVO .f]'
         echo ' ou: '$0' [OPÇÃO]'
