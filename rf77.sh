@@ -29,8 +29,8 @@ case $1 in
         echo 'Instalando o Remote f77'
         echo 'Qual o usuário completo do ssh? (Exemplo (se seu num usp for 1234 digite o seguinte e de enter): a1234@basalto.ifsc.usp.br)'
         read rf77USER
-        mkdir ~/.config
-        mkdir ~/.config/remotef77
+        mkdir -p ~/.config
+        mkdir -p ~/.config/remotef77
         echo $rf77USER > ~/.config/remotef77/user
         echo 'Deseja salvar a senha do Basalto num arquivo? Se sim, digite a senha que você usa para conectar por ssh agora. Se não quiser, deixe em branco e de enter - nesse caso o programa irá perguntar sua senha toda vez que for rodado.'
         read rf77PASSWD
@@ -111,8 +111,8 @@ fi
 ARQUIVOf=`basename $1 .f`
 DIRETORIOf=`dirname $1`
 
-sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir ~/.tmp'
-sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir ~/.tmp/rf77'
+sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir -p ~/.tmp'
+sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir -p ~/.tmp/rf77'
 scp $1 $rf77USER:~/.tmp/rf77/file.f
 sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'f77 ~/.tmp/rf77/file.f -o ~/.tmp/rf77/output-exec'
 scp $rf77USER:~/.tmp/rf77/file.f $DIRETORIOf/$ARQUIVOf-exec
