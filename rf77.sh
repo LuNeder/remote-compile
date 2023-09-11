@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+
   # rf77.sh
   # Copyright 2023 Luana Neder
   #
@@ -17,6 +18,10 @@
   # This work consists of the file rf77.sh
 
 # 
+if [ $(id -u) -eq 0 ]; then
+    echo 'Não rode como root.'
+    exit 2
+fi
 
 case $1 in
     --install)
@@ -31,12 +36,41 @@ case $1 in
             echo $rf77PASSWD > ~/.config/remotef77/passwd
             echo 'Senha salva'
         fi
-        echo 'Deseja instalar o rf77 em sua PATH, para poder utilizar o programa simplesmente ao rodar "rf77"?'
-        echo 'Para instalar, tenha certeza que você rodou o rf77 --install como root("sudo '$0 $1'")' 
-        echo 'Se você responder que não quer instalar, poderá usar o rf77 rodando "'$0
-        echo 'Responda com "sim" ou "nao" (sem as aspas) e de enter.' 
-
- 
-
-
+        echo 'Deseja instalar o rf77 em sua PATH, para poder utilizar o programa simplesmente ao rodar "rf77" no terminal?'
+        echo 'Se você responder que não quer instalar, poderá usar o rf77 rodando "'$0'"'
+        echo 'Responda com "sim" ou "nao" (sem as aspas) e de enter.'
+        read rf77INSTALL
+        case $rf77INSTALL in
+            sim)
+                echo instalando...
+                sudo cp $0 /usr/bin/rf77
+                sudo chmod 755 /usr/bin/rf77
+                echo 'Instalado!'
+                echo 'O rf77 foi configurado!'
+                echo 'Execute com "rf77 [ARQUIVO .f]"'
+                ;;
+            nao)
+                echo Ok!
+                echo 'O rf77 foi configurado!'
+                echo 'Execute com "'$0' [ARQUIVO .f]"'
+                ;;
+            *)
+                echo 'Responde direito, porra!'
+                echo 'O rf77 NÃO foi configurado completamente. Rode com --install mais uma vez.'
+                exit 1
+        esac
+        exit 0
+        ;;
+    --help)
+        echo 'Remote f77'
+        echo 'GitHub:  https://github.com/LuNeder/remote-f77'
+        echo
+        echo 'Uso: '$0' [ARQUIVO .f]'
+        echo ' ou: '$0' [OPÇÃO]'
+        echo 'Compila um arquivo .f da tua máquina local com o f77 de uma máquina remota e copia o executável para a máquina local.'
+        echo
+        echo '--help:    mostra esta mensagem'
+        echo '--install: configura o programa'
+        exit 0
 esac
+echo 123
