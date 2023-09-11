@@ -73,4 +73,20 @@ case $1 in
         echo '--install: configura o programa'
         exit 0
 esac
-echo 123
+
+if [ "x$1" == "x" ]; then 
+    echo 'Arquivo .f não especificado'
+    echo
+    $0 --help
+    exit 3
+fi
+
+rf77USER=`cat ~/.config/remotef77/user`
+
+if [ -e "~/.config/remotef77/passwd" ]; then
+    rf77PASSWD=`cat ~/.config/remotef77/passwd`
+else
+    echo 'Qual a senha para ssh de '$rf77USER'?'
+    read rf77PASSWD
+fi
+
