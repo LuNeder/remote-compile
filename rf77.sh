@@ -17,7 +17,8 @@
   #
   # This work consists of the file rf77.sh
 
-# 
+#
+set -e 
 if [ $(id -u) -eq 0 ]; then
     echo 'Não rode como root.'
     exit 2
@@ -81,7 +82,12 @@ if [ "x$1" == "x" ]; then
     exit 3
 fi
 
-rf77USER=`cat ~/.config/remotef77/user`
+if [ -e "~/.config/remotef77/passwd" ]; then
+    rf77USER=`cat ~/.config/remotef77/user`
+else
+    echo 'Rf77 não configurado! Rode '$0' --install'
+    exit 4
+fi
 
 if [ -e "~/.config/remotef77/passwd" ]; then
     rf77PASSWD=`cat ~/.config/remotef77/passwd`
@@ -89,4 +95,15 @@ else
     echo 'Qual a senha para ssh de '$rf77USER'?'
     read rf77PASSWD
 fi
+
+ARQUIVOf=`basename $1 .f`
+DIRETORIOf=`dirname $1`
+
+sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir ~/.tmp'
+sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir ~/.tmp/rf77'
+scp $1 $rf77USER:~/.tmp/rf77/file.f
+sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'f77 ~/.tmp/rf77/file.f -o ~/.tmp/rf77/output-exec'
+scp $rf77USER:~/.tmp/rf77/file.f $DIRETORIOf/$ARQUIVOf-exec
+sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'rm -rf ~/.tmp/rf77/'
+echo 'Arquivo $DIRETORIOf/$ARQUIVOf-exec compilado com sucesso!'
 
