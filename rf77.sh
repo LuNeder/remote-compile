@@ -29,6 +29,7 @@ case $1 in
         echo 'Instalando o Remote f77'
         echo 'Qual o usuário completo do ssh? (Exemplo (se seu num usp for 1234 digite o seguinte e de enter): a1234@basalto.ifsc.usp.br)'
         read rf77USER
+        mkdir ~/.config
         mkdir ~/.config/remotef77
         echo $rf77USER > ~/.config/remotef77/user
         echo 'Deseja salvar a senha do Basalto num arquivo? Se sim, digite a senha que você usa para conectar por ssh agora. Se não quiser, deixe em branco e de enter - nesse caso o programa irá perguntar sua senha toda vez que for rodado.'
@@ -70,9 +71,20 @@ case $1 in
         echo ' ou: '$0' [OPÇÃO]'
         echo 'Compila um arquivo .f da tua máquina local com o f77 de uma máquina remota e copia o executável para a máquina local.'
         echo
-        echo '--help:    mostra esta mensagem'
-        echo '--install: configura o programa'
+        echo 'Simplesmente rode "'$0' [CAMINHO DO ARQUIVO .f QUE QUER COMPILAR]".'
+        echo
+        echo 'Outras opções:'
+        echo '--help:      mostra esta mensagem'
+        echo '--install:   configura o programa'
+        echo '--uninstall: desinstala o programa e suas configurações'
         exit 0
+        ;;
+    --uninstall)
+        echo 'Desinstalando...'
+        rm -rf ~/.config/remotef77
+        echo 'Configurações removidas!'
+        echo 'Tentando desinstalar de /usr/bin... (se você anteriormente respondeu "nao" quando perguntei se queria instalar na PATH, pode ignorar qualquer erro que aparecer depois dessa mensagem!)'
+        sudo rm -f /usr/bin/rf77
 esac
 
 if [ "x$1" == "x" ]; then 
