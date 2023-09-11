@@ -94,14 +94,14 @@ if [ "x$1" == "x" ]; then
     exit 3
 fi
 
-if [ -e "~/.config/remotef77/passwd" ]; then
+if [ -f ~/.config/remotef77/passwd ]; then
     rf77USER=`cat ~/.config/remotef77/user`
 else
     echo 'Rf77 não configurado! Rode '$0' --install'
     exit 4
 fi
 
-if [ -e "~/.config/remotef77/passwd" ]; then
+if [ -f ~/.config/remotef77/passwd ]; then
     rf77PASSWD=`cat ~/.config/remotef77/passwd`
 else
     echo 'Qual a senha para ssh de '$rf77USER'?'
