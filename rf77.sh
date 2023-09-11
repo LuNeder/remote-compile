@@ -116,19 +116,13 @@ ARQUIVOf=`basename $1 .f`
 DIRETORIOf=`dirname $1`
 PASSWDpath=`echo ~/.config/remotef77/passwd`
 
-echo olar1
 sshpass -f $PASSWDpath ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir -p ~/.tmp'
-echo ssh1
 sshpass -f $PASSWDpath ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir -p ~/.tmp/rf77'
-echo ssh2
 sshpass -f $PASSWDpath scp $1 $rf77USER:~/.tmp/rf77/file.f
-echo scp1
 sshpass -f $PASSWDpath ssh -o StrictHostKeyChecking=no $rf77USER 'f77 ~/.tmp/rf77/file.f -o ~/.tmp/rf77/output-exec'
-echo ssh3
 sshpass -f $PASSWDpath scp $rf77USER:~/.tmp/rf77/output-exec $DIRETORIOf/$ARQUIVOf-exec
-echo scp2
 sshpass -f $PASSWDpath ssh -o StrictHostKeyChecking=no $rf77USER 'rm -rf ~/.tmp/rf77/'
-echo ssh4
+
 
 if [ "$DELETEPASS" == "yes" ]; then
     rm -f ~/.config/remotef77/passwd
