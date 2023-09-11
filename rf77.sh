@@ -85,6 +85,8 @@ case $1 in
         echo 'Configurações removidas!'
         echo 'Tentando desinstalar de /usr/bin... (se você anteriormente respondeu "nao" quando perguntei se queria instalar na PATH, pode ignorar qualquer erro que aparecer depois dessa mensagem!)'
         sudo rm -f /usr/bin/rf77
+        echo Desinstalado com sucesso
+        exit 0
 esac
 
 if [ "x$1" == "x" ]; then 
@@ -94,7 +96,7 @@ if [ "x$1" == "x" ]; then
     exit 3
 fi
 
-if [ -f ~/.config/remotef77/passwd ]; then
+if [ -f ~/.config/remotef77/user ]; then
     rf77USER=`cat ~/.config/remotef77/user`
 else
     echo 'Rf77 não configurado! Rode '$0' --install'
@@ -102,20 +104,35 @@ else
 fi
 
 if [ -f ~/.config/remotef77/passwd ]; then
-    rf77PASSWD=`cat ~/.config/remotef77/passwd`
+    echo
 else
+    DELETEPASS='yes'
     echo 'Qual a senha para ssh de '$rf77USER'?'
     read rf77PASSWD
+    echo $rf77PASSWD > ~/.config/remotef77/passwd
 fi
 
 ARQUIVOf=`basename $1 .f`
 DIRETORIOf=`dirname $1`
+PASSWDpath=`echo ~/.config/remotef77/passwd`
 
-sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir -p ~/.tmp'
-sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir -p ~/.tmp/rf77'
-scp $1 $rf77USER:~/.tmp/rf77/file.f
-sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'f77 ~/.tmp/rf77/file.f -o ~/.tmp/rf77/output-exec'
-scp $rf77USER:~/.tmp/rf77/file.f $DIRETORIOf/$ARQUIVOf-exec
-sshpass -p$rf77PASSWD ssh -o StrictHostKeyChecking=no $rf77USER 'rm -rf ~/.tmp/rf77/'
-echo 'Arquivo $DIRETORIOf/$ARQUIVOf-exec compilado com sucesso!'
+echo olar1
+sshpass -f $PASSWDpath ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir -p ~/.tmp'
+echo ssh1
+sshpass -f $PASSWDpath ssh -o StrictHostKeyChecking=no $rf77USER 'mkdir -p ~/.tmp/rf77'
+echo ssh2
+sshpass -f $PASSWDpath scp $1 $rf77USER:~/.tmp/rf77/file.f
+echo scp1
+sshpass -f $PASSWDpath ssh -o StrictHostKeyChecking=no $rf77USER 'f77 ~/.tmp/rf77/file.f -o ~/.tmp/rf77/output-exec'
+echo ssh3
+sshpass -f $PASSWDpath scp $rf77USER:~/.tmp/rf77/output-exec $DIRETORIOf/$ARQUIVOf-exec
+echo scp2
+sshpass -f $PASSWDpath ssh -o StrictHostKeyChecking=no $rf77USER 'rm -rf ~/.tmp/rf77/'
+echo ssh4
+
+if [ "$DELETEPASS" == "yes" ]; then
+    rm -f ~/.config/remotef77/passwd
+fi
+
+echo 'Arquivo '$DIRETORIOf/$ARQUIVOf'-exec compilado com sucesso!'
 
