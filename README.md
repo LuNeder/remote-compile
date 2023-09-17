@@ -31,7 +31,7 @@ rf77 ./teste.f
 ````
 
 ## Licença
-Este projeto é licenceado sob a [LPPL >=1.3](https://github.com/LuNeder/remote-f77/blob/strawberry/LICENSE)
+Este projeto é licenceado sob a [LPPL >=1.3c](https://github.com/LuNeder/remote-f77/blob/strawberry/LICENSE)
 
 ##
 Agradecimentos especial à galera do GELOS que me ajudou com a sintaxe do sh: Gabriel, Victor, Natan
